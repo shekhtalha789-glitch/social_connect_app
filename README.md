@@ -63,7 +63,7 @@ The app is built in small, focused commits (see
 [`plans/social-connect-master-plan.md`](plans/social-connect-master-plan.md)):
 
 - [x] Foundation + navigation (Riverpod, go_router, theme, bottom-nav shell)
-- [ ] Authentication (sign up / login / forgot password)
+- [x] Authentication (sign up / login / forgot password + route guard)
 - [ ] Profile setup/edit
 - [ ] Post feed
 - [ ] Like + comment

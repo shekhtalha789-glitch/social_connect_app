@@ -37,8 +37,16 @@ class WelcomeScreen extends StatelessWidget {
               ),
               const Spacer(),
               FilledButton(
-                onPressed: () => context.go(Routes.feed),
-                child: const Text(AppStrings.getStarted),
+                onPressed: () => context.go(Routes.login),
+                child: const Text('Log In'),
+              ),
+              const SizedBox(height: 12),
+              OutlinedButton(
+                onPressed: () => context.go(Routes.signup),
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size.fromHeight(52),
+                ),
+                child: const Text('Create account'),
               ),
             ],
           ),

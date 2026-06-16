@@ -1,7 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/auth/presentation/auth_providers.dart';
+import '../features/auth/presentation/forgot_password_screen.dart';
+import '../features/auth/presentation/login_screen.dart';
+import '../features/auth/presentation/signup_screen.dart';
 import '../features/feed/presentation/feed_screen.dart';
 import '../features/home/presentation/home_shell.dart';
 import '../features/profile/presentation/profile_screen.dart';
@@ -12,20 +17,64 @@ import '../features/welcome/presentation/welcome_screen.dart';
 /// rename happens in one place.
 abstract class Routes {
   static const welcome = '/welcome';
+  static const login = '/login';
+  static const signup = '/signup';
+  static const forgot = '/forgot-password';
   static const feed = '/feed';
   static const profile = '/profile';
   static const settings = '/settings';
 }
 
-/// Exposes the app's [GoRouter] as a provider. Keeping it in Riverpod lets later
-/// features (auth) plug a `redirect` keyed on auth state without touching [App].
+/// Routes reachable while signed out. Everything else requires auth.
+const _authArea = {
+  Routes.welcome,
+  Routes.login,
+  Routes.signup,
+  Routes.forgot,
+};
+
+/// Exposes the app's [GoRouter] as a provider. The router watches auth state via
+/// a [ValueNotifier] (its `refreshListenable`) so it re-evaluates the redirect
+/// whenever the user signs in or out.
 final routerProvider = Provider<GoRouter>((ref) {
+  final authState = ValueNotifier<AsyncValue<User?>>(const AsyncValue.loading());
+  ref.listen(
+    authStateProvider,
+    (_, next) => authState.value = next,
+    fireImmediately: true,
+  );
+  ref.onDispose(authState.dispose);
+
   return GoRouter(
     initialLocation: Routes.welcome,
+    refreshListenable: authState,
+    redirect: (context, state) {
+      // While the first auth check is in flight, don't bounce the user around.
+      if (authState.value.isLoading) return null;
+
+      final loggedIn = authState.value.asData?.value != null;
+      final inAuthArea = _authArea.contains(state.matchedLocation);
+
+      if (!loggedIn) return inAuthArea ? null : Routes.welcome;
+      if (loggedIn && inAuthArea) return Routes.feed;
+      return null;
+    },
     routes: [
       GoRoute(
         path: Routes.welcome,
         builder: (context, state) => const WelcomeScreen(),
+      ),
+      GoRoute(
+        path: Routes.login,
+        builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: Routes.signup,
+        builder: (context, state) => const SignupScreen(),
+      ),
+      GoRoute(
+        path: Routes.forgot,
+        builder: (context, state) => const ForgotPasswordScreen(),
       ),
       // Bottom-nav tabs live inside a StatefulShellRoute so each tab keeps its
       // own navigation stack — the Stack + Tab navigator combo from the spec.
