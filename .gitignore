@@ -43,3 +43,11 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Firebase config — secrets, never commit to the public repo
+lib/firebase_options.dart
+**/google-services.json
+**/GoogleService-Info.plist
+.firebase/
+firebase.json
+.firebaserc

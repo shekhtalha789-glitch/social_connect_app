@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'app.dart';
+import 'app/app.dart';
 
 /// ENTRY POINT
-/// The only job of main() is to start the app. All config lives in App.
+/// The only job of main() is to start the app inside a Riverpod [ProviderScope],
+/// which makes every provider available to the whole widget tree.
+/// All app config lives in [App].
 void main() {
-  runApp(const App());
+  runApp(const ProviderScope(child: App()));
 }
