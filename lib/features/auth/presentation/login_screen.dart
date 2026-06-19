@@ -7,8 +7,9 @@ import '../../../core/utils/validators.dart';
 import '../../../core/widgets/responsive_center.dart';
 import '../data/auth_repository.dart';
 import 'auth_providers.dart';
+import 'widgets/auth_app_bar.dart';
 
-/// Login screen — email + password, with a link to Sign Up and Forgot Password.
+/// Login screen — email + password, with links to Sign Up and Forgot Password.
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
@@ -51,21 +52,30 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Log In')),
+      appBar: AuthAppBar(
+        title: 'Log In',
+        onBack: () => context.go(Routes.welcome),
+      ),
       body: SafeArea(
         child: ResponsiveCenter(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
             child: Form(
               key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  const SizedBox(height: 16),
+                  Text('Welcome back', style: theme.textTheme.displaySmall),
                   const SizedBox(height: 8),
                   Text(
-                    'Welcome back',
-                    style: Theme.of(context).textTheme.headlineSmall,
+                    'Please enter your credentials to access your account and '
+                    'reconnect with your community.',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                   ),
                   const SizedBox(height: 24),
                   TextFormField(
@@ -73,7 +83,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.next,
                     autofillHints: const [AutofillHints.email],
-                    decoration: const InputDecoration(labelText: 'Email'),
+                    decoration: const InputDecoration(
+                      labelText: 'Email',
+                      prefixIcon: Icon(Icons.mail_outline),
+                    ),
                     validator: Validators.email,
                   ),
                   const SizedBox(height: 16),
@@ -85,6 +98,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     onFieldSubmitted: (_) => _submit(),
                     decoration: InputDecoration(
                       labelText: 'Password',
+                      prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscure ? Icons.visibility : Icons.visibility_off,
@@ -97,9 +111,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
-                      onPressed: _loading
-                          ? null
-                          : () => context.push(Routes.forgot),
+                      onPressed:
+                          _loading ? null : () => context.push(Routes.forgot),
                       child: const Text('Forgot password?'),
                     ),
                   ),
@@ -114,15 +127,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           )
                         : const Text('Log In'),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 24),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text("Don't have an account?"),
                       TextButton(
-                        onPressed: _loading
-                            ? null
-                            : () => context.go(Routes.signup),
+                        onPressed:
+                            _loading ? null : () => context.go(Routes.signup),
                         child: const Text('Sign Up'),
                       ),
                     ],

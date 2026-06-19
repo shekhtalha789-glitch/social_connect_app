@@ -7,6 +7,7 @@ import '../../../core/utils/validators.dart';
 import '../../../core/widgets/responsive_center.dart';
 import '../data/auth_repository.dart';
 import 'auth_providers.dart';
+import 'widgets/auth_app_bar.dart';
 
 /// Sign Up screen — name, email, password, confirm password.
 class SignupScreen extends ConsumerStatefulWidget {
@@ -38,9 +39,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _loading = true);
     try {
-      await ref
-          .read(authRepositoryProvider)
-          .signUp(
+      await ref.read(authRepositoryProvider).signUp(
             name: _name.text,
             email: _email.text,
             password: _password.text,
@@ -59,21 +58,46 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Create Account')),
+      appBar: AuthAppBar(
+        title: 'Create Account',
+        onBack: () => context.go(Routes.welcome),
+      ),
       body: SafeArea(
         child: ResponsiveCenter(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
             child: Form(
               key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(height: 8),
+                  Container(
+                    width: 64,
+                    height: 64,
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primaryContainer
+                          .withValues(alpha: 0.10),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Icon(
+                      Icons.diversity_1,
+                      color: theme.colorScheme.primary,
+                      size: 32,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Text('Join Social Connect',
+                      style: theme.textTheme.displaySmall),
+                  const SizedBox(height: 8),
                   Text(
-                    'Join Social Connect',
-                    style: Theme.of(context).textTheme.headlineSmall,
+                    'Start building your community and discover meaningful '
+                    'interactions today.',
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                   ),
                   const SizedBox(height: 24),
                   TextFormField(
@@ -81,7 +105,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     textCapitalization: TextCapitalization.words,
                     textInputAction: TextInputAction.next,
                     autofillHints: const [AutofillHints.name],
-                    decoration: const InputDecoration(labelText: 'Name'),
+                    decoration: const InputDecoration(
+                      labelText: 'Full Name',
+                      prefixIcon: Icon(Icons.person_outline),
+                    ),
                     validator: Validators.name,
                   ),
                   const SizedBox(height: 16),
@@ -90,7 +117,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.next,
                     autofillHints: const [AutofillHints.email],
-                    decoration: const InputDecoration(labelText: 'Email'),
+                    decoration: const InputDecoration(
+                      labelText: 'Email',
+                      prefixIcon: Icon(Icons.mail_outline),
+                    ),
                     validator: Validators.email,
                   ),
                   const SizedBox(height: 16),
@@ -101,6 +131,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     autofillHints: const [AutofillHints.newPassword],
                     decoration: InputDecoration(
                       labelText: 'Password',
+                      prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscure ? Icons.visibility : Icons.visibility_off,
@@ -117,7 +148,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     textInputAction: TextInputAction.done,
                     onFieldSubmitted: (_) => _submit(),
                     decoration: const InputDecoration(
-                      labelText: 'Confirm password',
+                      labelText: 'Confirm Password',
+                      prefixIcon: Icon(Icons.verified_user_outlined),
                     ),
                     validator: (v) =>
                         Validators.confirmPassword(v, _password.text),
@@ -133,15 +165,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                           )
                         : const Text('Sign Up'),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 24),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text('Already have an account?'),
                       TextButton(
-                        onPressed: _loading
-                            ? null
-                            : () => context.go(Routes.login),
+                        onPressed:
+                            _loading ? null : () => context.go(Routes.login),
                         child: const Text('Log In'),
                       ),
                     ],

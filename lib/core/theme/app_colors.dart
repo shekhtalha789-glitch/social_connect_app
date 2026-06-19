@@ -13,6 +13,8 @@ class AppColors {
   static const onPrimaryContainer = Color(0xFFEDEAFF);
   static const inversePrimary = Color(0xFFC1C1FF);
   static const surfaceTint = Color(0xFF4E4EC9);
+  static const primaryFixed = Color(0xFFE2DFFF);
+  static const onPrimaryFixed = Color(0xFF0A006B);
 
   // Secondary (spirited red — reserved for "Like" and critical accents)
   static const secondary = Color(0xFFB7131A);
