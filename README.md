@@ -53,9 +53,11 @@ dart pub global activate flutterfire_cli
 flutterfire configure        # generates lib/firebase_options.dart
 ```
 
-Then enable **Email/Password** auth, **Cloud Firestore**, and **Storage** in the
-Firebase console. `google-services.json` / `GoogleService-Info.plist` /
-`firebase_options.dart` stay local and out of version control.
+Then in the Firebase console enable **Authentication → Email/Password**, create
+**Cloud Firestore**, and enable **Storage** (profile/post images are stored
+under `profile_images/{uid}.jpg`). `google-services.json` /
+`GoogleService-Info.plist` / `firebase_options.dart` stay local and out of
+version control.
 
 ## Build progress
 
@@ -64,7 +66,7 @@ The app is built in small, focused commits (see
 
 - [x] Foundation + navigation (Riverpod, go_router, theme, bottom-nav shell)
 - [x] Authentication (sign up / login / forgot password + route guard)
-- [ ] Profile setup/edit
+- [x] Profile setup/edit (name, bio, profile picture)
 - [ ] Post feed
 - [ ] Like + comment
 - [ ] View other users' profiles
