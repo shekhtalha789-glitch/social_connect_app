@@ -7,6 +7,7 @@ import '../features/auth/presentation/auth_providers.dart';
 import '../features/auth/presentation/forgot_password_screen.dart';
 import '../features/auth/presentation/login_screen.dart';
 import '../features/auth/presentation/signup_screen.dart';
+import '../features/feed/presentation/create_post_screen.dart';
 import '../features/feed/presentation/feed_screen.dart';
 import '../features/home/presentation/home_shell.dart';
 import '../features/profile/presentation/edit_profile_screen.dart';
@@ -22,6 +23,7 @@ abstract class Routes {
   static const signup = '/signup';
   static const forgot = '/forgot-password';
   static const feed = '/feed';
+  static const createPost = '/create-post';
   static const profile = '/profile';
   static const editProfile = '/edit-profile';
   static const settings = '/settings';
@@ -78,10 +80,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: Routes.forgot,
         builder: (context, state) => const ForgotPasswordScreen(),
       ),
-      // Full-screen route pushed over the shell (auth-gated by default).
+      // Full-screen routes pushed over the shell (auth-gated by default).
       GoRoute(
         path: Routes.editProfile,
         builder: (context, state) => const EditProfileScreen(),
+      ),
+      GoRoute(
+        path: Routes.createPost,
+        builder: (context, state) => const CreatePostScreen(),
       ),
       // Bottom-nav tabs live inside a StatefulShellRoute so each tab keeps its
       // own navigation stack — the Stack + Tab navigator combo from the spec.

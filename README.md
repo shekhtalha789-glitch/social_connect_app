@@ -67,7 +67,7 @@ The app is built in small, focused commits (see
 - [x] Foundation + navigation (Riverpod, go_router, theme, bottom-nav shell)
 - [x] Authentication (sign up / login / forgot password + route guard)
 - [x] Profile setup/edit (name, bio, profile picture)
-- [ ] Post feed
+- [x] Post feed (create text+image, Firestore, scrollable list, timestamps)
 - [ ] Like + comment
 - [ ] View other users' profiles
 - [ ] Notifications + real-time updates
