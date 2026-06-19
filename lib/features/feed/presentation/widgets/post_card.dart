@@ -11,8 +11,8 @@ import '../../domain/post.dart';
 import '../feed_providers.dart';
 import 'like_button.dart';
 
-/// A single post in the feed: author header, text, optional image, and the
-/// like / comment action row.
+/// A single post in the feed: tappable author header, text, optional image, and
+/// the like / comment action row.
 class PostCard extends ConsumerWidget {
   const PostCard({super.key, required this.post});
 
@@ -21,69 +21,108 @@ class PostCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
     final uid = ref.watch(authStateProvider).asData?.value?.uid;
     final liked = post.isLikedBy(uid);
 
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ListTile(
-            leading: UserAvatar(
-              photoUrl: post.authorPhotoUrl,
-              initial: post.authorInitial,
-            ),
-            title: Text(
-              post.authorName.isEmpty ? 'Unknown' : post.authorName,
-              style: const TextStyle(fontWeight: FontWeight.w600),
-            ),
-            subtitle: Text(timeAgo(post.createdAt)),
-            onTap: post.authorId.isEmpty
-                ? null
-                : () => context.push(Routes.userProfile(post.authorId)),
-          ),
-          if (post.text.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-              child: Text(post.text, style: theme.textTheme.bodyLarge),
-            ),
-          if (post.hasImage)
-            CachedNetworkImage(
-              imageUrl: post.imageUrl,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              placeholder: (context, url) => const SizedBox(
-                height: 200,
-                child: Center(child: CircularProgressIndicator()),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(
+          color: scheme.outlineVariant.withValues(alpha: 0.2),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Author header (tappable -> profile)
+            InkWell(
+              borderRadius: BorderRadius.circular(8),
+              onTap: post.authorId.isEmpty
+                  ? null
+                  : () => context.push(Routes.userProfile(post.authorId)),
+              child: Row(
+                children: [
+                  UserAvatar(
+                    photoUrl: post.authorPhotoUrl,
+                    initial: post.authorInitial,
+                  ),
+                  const SizedBox(width: 12),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        post.authorName.isEmpty ? 'Unknown' : post.authorName,
+                        style: theme.textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w600),
+                      ),
+                      Text(
+                        timeAgo(post.createdAt),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: scheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              errorWidget: (context, url, error) => const SizedBox(
-                height: 120,
-                child: Center(child: Icon(Icons.broken_image_outlined)),
-              ),
             ),
-          Row(
-            children: [
-              LikeButton(
-                liked: liked,
-                count: post.likeCount,
-                onTap: uid == null
-                    ? null
-                    : () => ref
-                          .read(feedRepositoryProvider)
-                          .toggleLike(post.id, uid),
-              ),
-              _ActionButton(
-                icon: Icons.mode_comment_outlined,
-                label: post.commentCount > 0
-                    ? '${post.commentCount}'
-                    : 'Comment',
-                onTap: () => context.push(Routes.comments(post.id)),
+            if (post.text.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Text(post.text, style: theme.textTheme.bodyLarge),
+            ],
+            if (post.hasImage) ...[
+              const SizedBox(height: 12),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: AspectRatio(
+                  aspectRatio: 4 / 3,
+                  child: CachedNetworkImage(
+                    imageUrl: post.imageUrl,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(
+                      color: scheme.surfaceContainerHigh,
+                      child: const Center(child: CircularProgressIndicator()),
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      color: scheme.surfaceContainerHigh,
+                      child: const Center(
+                        child: Icon(Icons.broken_image_outlined),
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ],
-          ),
-        ],
+            const SizedBox(height: 8),
+            Divider(color: scheme.surfaceContainerHigh, height: 1),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                LikeButton(
+                  liked: liked,
+                  count: post.likeCount,
+                  onTap: uid == null
+                      ? null
+                      : () => ref
+                          .read(feedRepositoryProvider)
+                          .toggleLike(post.id, uid),
+                ),
+                const SizedBox(width: 8),
+                _ActionButton(
+                  icon: Icons.chat_bubble_outline,
+                  label: post.commentCount > 0
+                      ? '${post.commentCount}'
+                      : 'Comment',
+                  onTap: () => context.push(Routes.comments(post.id)),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -105,7 +144,10 @@ class _ActionButton extends StatelessWidget {
     return TextButton.icon(
       onPressed: onTap,
       icon: Icon(icon, size: 20),
-      label: Text(label),
+      label: Text(
+        label,
+        style: const TextStyle(fontWeight: FontWeight.w600),
+      ),
       style: TextButton.styleFrom(
         foregroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
       ),

@@ -78,7 +78,7 @@ class AppTheme {
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         scrolledUnderElevation: 0.5,
-        titleTextStyle: AppTextStyles.titleMd.copyWith(color: scheme.onSurface),
+        titleTextStyle: AppTextStyles.headlineMd.copyWith(color: scheme.primary),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(

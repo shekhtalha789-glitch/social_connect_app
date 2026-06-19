@@ -53,6 +53,7 @@ class AppColors {
   static const outline = Color(0xFF777585);
   static const outlineVariant = Color(0xFFC7C4D6);
 
-  /// The "Like" accent. Per the design, a spirited red is reserved for likes.
-  static const like = secondaryContainer;
+  /// The "Like" accent. Per the design, the spirited red secondary is reserved
+  /// for likes.
+  static const like = secondary;
 }

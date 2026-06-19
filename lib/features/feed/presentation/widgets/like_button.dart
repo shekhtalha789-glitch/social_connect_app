@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
+import '../../../../core/theme/app_colors.dart';
+
 /// Like action with a bouncy heart. The icon replays a spring-scale animation
 /// whenever the liked state flips, giving the tap a tactile, modern feel.
 class LikeButton extends StatelessWidget {
@@ -18,7 +20,7 @@ class LikeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = liked
-        ? Colors.red
+        ? AppColors.like
         : Theme.of(context).colorScheme.onSurfaceVariant;
 
     final icon =
@@ -39,7 +41,10 @@ class LikeButton extends StatelessWidget {
     return TextButton.icon(
       onPressed: onTap,
       icon: icon,
-      label: Text(count > 0 ? '$count' : 'Like'),
+      label: Text(
+        count > 0 ? '$count' : 'Like',
+        style: const TextStyle(fontWeight: FontWeight.w600),
+      ),
       style: TextButton.styleFrom(foregroundColor: color),
     );
   }
