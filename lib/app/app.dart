@@ -23,8 +23,7 @@ class App extends ConsumerWidget {
     return MaterialApp.router(
       title: AppStrings.appName,
       theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.light,
       scaffoldMessengerKey: scaffoldMessengerKey,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
