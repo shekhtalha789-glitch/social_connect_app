@@ -59,6 +59,10 @@ under `profile_images/{uid}.jpg`). `google-services.json` /
 `GoogleService-Info.plist` / `firebase_options.dart` stay local and out of
 version control.
 
+The "view user's posts" query needs a Firestore composite index on
+`posts (authorId asc, createdAt desc)`. The first time you open another user's
+profile, the console logs a one-click link to create it.
+
 ## Build progress
 
 The app is built in small, focused commits (see
@@ -69,7 +73,7 @@ The app is built in small, focused commits (see
 - [x] Profile setup/edit (name, bio, profile picture)
 - [x] Post feed (create text+image, Firestore, scrollable list, timestamps)
 - [x] Like + comment (transactional likes, comments subcollection)
-- [ ] View other users' profiles
+- [x] View other users' profiles (tap an author in the feed)
 - [ ] Notifications + real-time updates
 - [ ] Animations + responsive polish
 

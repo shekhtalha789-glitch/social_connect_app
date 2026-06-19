@@ -39,6 +39,9 @@ class PostCard extends ConsumerWidget {
               style: const TextStyle(fontWeight: FontWeight.w600),
             ),
             subtitle: Text(timeAgo(post.createdAt)),
+            onTap: post.authorId.isEmpty
+                ? null
+                : () => context.push(Routes.userProfile(post.authorId)),
           ),
           if (post.text.isNotEmpty)
             Padding(

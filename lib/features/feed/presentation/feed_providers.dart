@@ -17,6 +17,12 @@ final postsStreamProvider = StreamProvider<List<Post>>((ref) {
   return ref.watch(feedRepositoryProvider).watchPosts();
 });
 
+/// Live stream of a single user's posts (for their profile page).
+final userPostsStreamProvider =
+    StreamProvider.family<List<Post>, String>((ref, uid) {
+  return ref.watch(feedRepositoryProvider).watchUserPosts(uid);
+});
+
 /// Live comments for a given post id.
 final commentsStreamProvider =
     StreamProvider.family<List<Comment>, String>((ref, postId) {

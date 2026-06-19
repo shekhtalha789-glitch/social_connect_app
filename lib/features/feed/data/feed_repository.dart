@@ -25,6 +25,17 @@ class FeedRepository {
         );
   }
 
+  /// Live stream of a single user's posts, newest first.
+  /// (Requires a Firestore composite index on authorId + createdAt — the
+  /// console offers a one-click link the first time this query runs.)
+  Stream<List<Post>> watchUserPosts(String uid) {
+    return _posts
+        .where('authorId', isEqualTo: uid)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snap) => snap.docs.map(Post.fromDoc).toList());
+  }
+
   /// Creates a post. Uploads the optional image first so the document is written
   /// once, already pointing at its image URL.
   Future<void> createPost({
