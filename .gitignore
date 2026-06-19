@@ -49,5 +49,6 @@ lib/firebase_options.dart
 **/google-services.json
 **/GoogleService-Info.plist
 .firebase/
-firebase.json
 .firebaserc
+# Cloud Functions
+functions/node_modules/

@@ -63,6 +63,24 @@ The "view user's posts" query needs a Firestore composite index on
 `posts (authorId asc, createdAt desc)`. The first time you open another user's
 profile, the console logs a one-click link to create it.
 
+### Notifications & real-time
+
+- **Real-time updates** for the feed, likes and comments are already live — every
+  screen reads Firestore snapshot streams, so changes appear without a refresh.
+- **Push notifications** use Firebase Cloud Messaging. The app requests
+  permission and saves each user's FCM token to their `users/{uid}` doc.
+  Foreground messages show an in-app banner; background messages appear in the
+  system tray.
+- **Auto like/comment notifications** are sent by the Cloud Functions in
+  [`functions/`](functions/). They trigger on new likes/comments and push to the
+  post author's token. Deploy (requires the **Blaze** plan):
+  ```bash
+  cd functions && npm install && cd ..
+  firebase deploy --only functions
+  ```
+  Without deploying, you can still demo FCM by sending a test message from the
+  Firebase console to a device token.
+
 ## Build progress
 
 The app is built in small, focused commits (see
@@ -74,7 +92,7 @@ The app is built in small, focused commits (see
 - [x] Post feed (create text+image, Firestore, scrollable list, timestamps)
 - [x] Like + comment (transactional likes, comments subcollection)
 - [x] View other users' profiles (tap an author in the feed)
-- [ ] Notifications + real-time updates
+- [x] Notifications (FCM) + real-time updates (Firestore streams)
 - [ ] Animations + responsive polish
 
 ## Submission

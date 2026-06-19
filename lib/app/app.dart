@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/constants/app_strings.dart';
 import '../core/theme/app_theme.dart';
+import '../features/notifications/data/notification_service.dart';
+import '../features/notifications/presentation/notification_providers.dart';
 import 'router.dart';
 
 /// APP
@@ -15,12 +17,15 @@ class App extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
+    // Start FCM setup once a user signs in.
+    ref.watch(notificationSetupProvider);
 
     return MaterialApp.router(
       title: AppStrings.appName,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: ThemeMode.system,
+      scaffoldMessengerKey: scaffoldMessengerKey,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
     );
