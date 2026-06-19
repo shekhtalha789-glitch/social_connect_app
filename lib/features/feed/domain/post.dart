@@ -14,6 +14,7 @@ class Post {
     required this.createdAt,
     required this.likeCount,
     required this.likedBy,
+    required this.commentCount,
   });
 
   final String id;
@@ -25,6 +26,7 @@ class Post {
   final DateTime createdAt;
   final int likeCount;
   final List<String> likedBy;
+  final int commentCount;
 
   bool get hasImage => imageUrl.isNotEmpty;
   String get authorInitial =>
@@ -46,6 +48,7 @@ class Post {
       createdAt: ts is Timestamp ? ts.toDate() : DateTime.now(),
       likeCount: (data['likeCount'] as num?)?.toInt() ?? 0,
       likedBy: List<String>.from(data['likedBy'] as List<dynamic>? ?? const []),
+      commentCount: (data['commentCount'] as num?)?.toInt() ?? 0,
     );
   }
 }

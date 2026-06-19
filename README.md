@@ -68,7 +68,7 @@ The app is built in small, focused commits (see
 - [x] Authentication (sign up / login / forgot password + route guard)
 - [x] Profile setup/edit (name, bio, profile picture)
 - [x] Post feed (create text+image, Firestore, scrollable list, timestamps)
-- [ ] Like + comment
+- [x] Like + comment (transactional likes, comments subcollection)
 - [ ] View other users' profiles
 - [ ] Notifications + real-time updates
 - [ ] Animations + responsive polish

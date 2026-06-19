@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 import '../../profile/domain/app_user.dart';
+import '../domain/comment.dart';
 import '../domain/post.dart';
 
 /// FEED REPOSITORY
@@ -49,6 +50,58 @@ class FeedRepository {
       'createdAt': FieldValue.serverTimestamp(),
       'likeCount': 0,
       'likedBy': <String>[],
+      'commentCount': 0,
     });
+  }
+
+  /// Likes or unlikes a post for [uid]. Runs in a transaction so the
+  /// `likeCount` and `likedBy` array can never drift on concurrent taps.
+  Future<void> toggleLike(String postId, String uid) async {
+    final ref = _posts.doc(postId);
+    await _firestore.runTransaction((tx) async {
+      final snap = await tx.get(ref);
+      if (!snap.exists) return;
+
+      final likedBy =
+          List<String>.from(snap.data()?['likedBy'] as List<dynamic>? ?? const []);
+      final liked = likedBy.contains(uid);
+
+      tx.update(ref, {
+        'likedBy':
+            liked ? FieldValue.arrayRemove([uid]) : FieldValue.arrayUnion([uid]),
+        'likeCount': FieldValue.increment(liked ? -1 : 1),
+      });
+    });
+  }
+
+  /// Live comments for a post, oldest first.
+  Stream<List<Comment>> watchComments(String postId) {
+    return _posts
+        .doc(postId)
+        .collection('comments')
+        .orderBy('createdAt')
+        .snapshots()
+        .map((snap) => snap.docs.map(Comment.fromDoc).toList());
+  }
+
+  /// Adds a comment and bumps the post's `commentCount` atomically.
+  Future<void> addComment({
+    required String postId,
+    required AppUser author,
+    required String text,
+  }) async {
+    final postRef = _posts.doc(postId);
+    final commentRef = postRef.collection('comments').doc();
+
+    final batch = _firestore.batch();
+    batch.set(commentRef, {
+      'authorId': author.uid,
+      'authorName': author.name,
+      'authorPhotoUrl': author.photoUrl,
+      'text': text.trim(),
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+    batch.update(postRef, {'commentCount': FieldValue.increment(1)});
+    await batch.commit();
   }
 }

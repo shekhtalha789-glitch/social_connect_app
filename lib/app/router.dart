@@ -7,6 +7,7 @@ import '../features/auth/presentation/auth_providers.dart';
 import '../features/auth/presentation/forgot_password_screen.dart';
 import '../features/auth/presentation/login_screen.dart';
 import '../features/auth/presentation/signup_screen.dart';
+import '../features/feed/presentation/comments_screen.dart';
 import '../features/feed/presentation/create_post_screen.dart';
 import '../features/feed/presentation/feed_screen.dart';
 import '../features/home/presentation/home_shell.dart';
@@ -27,6 +28,8 @@ abstract class Routes {
   static const profile = '/profile';
   static const editProfile = '/edit-profile';
   static const settings = '/settings';
+
+  static String comments(String postId) => '/posts/$postId/comments';
 }
 
 /// Routes reachable while signed out. Everything else requires auth.
@@ -88,6 +91,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.createPost,
         builder: (context, state) => const CreatePostScreen(),
+      ),
+      GoRoute(
+        path: '/posts/:id/comments',
+        builder: (context, state) =>
+            CommentsScreen(postId: state.pathParameters['id']!),
       ),
       // Bottom-nav tabs live inside a StatefulShellRoute so each tab keeps its
       // own navigation stack — the Stack + Tab navigator combo from the spec.

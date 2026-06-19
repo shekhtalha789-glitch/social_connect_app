@@ -1,19 +1,28 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../app/router.dart';
 import '../../../../core/utils/time_ago.dart';
 import '../../../../core/widgets/user_avatar.dart';
+import '../../../auth/presentation/auth_providers.dart';
 import '../../domain/post.dart';
+import '../feed_providers.dart';
 
-/// A single post in the feed: author header, text, and an optional image.
-class PostCard extends StatelessWidget {
+/// A single post in the feed: author header, text, optional image, and the
+/// like / comment action row.
+class PostCard extends ConsumerWidget {
   const PostCard({super.key, required this.post});
 
   final Post post;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final uid = ref.watch(authStateProvider).asData?.value?.uid;
+    final liked = post.isLikedBy(uid);
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       clipBehavior: Clip.antiAlias,
@@ -50,8 +59,54 @@ class PostCard extends StatelessWidget {
                 child: Center(child: Icon(Icons.broken_image_outlined)),
               ),
             ),
-          const SizedBox(height: 4),
+          Row(
+            children: [
+              _ActionButton(
+                icon: liked ? Icons.favorite : Icons.favorite_border,
+                color: liked ? Colors.red : null,
+                label: post.likeCount > 0 ? '${post.likeCount}' : 'Like',
+                onTap: uid == null
+                    ? null
+                    : () => ref
+                        .read(feedRepositoryProvider)
+                        .toggleLike(post.id, uid),
+              ),
+              _ActionButton(
+                icon: Icons.mode_comment_outlined,
+                label: post.commentCount > 0
+                    ? '${post.commentCount}'
+                    : 'Comment',
+                onTap: () => context.push(Routes.comments(post.id)),
+              ),
+            ],
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class _ActionButton extends StatelessWidget {
+  const _ActionButton({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    this.color,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback? onTap;
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton.icon(
+      onPressed: onTap,
+      icon: Icon(icon, size: 20, color: color),
+      label: Text(label),
+      style: TextButton.styleFrom(
+        foregroundColor: color ?? Theme.of(context).colorScheme.onSurfaceVariant,
       ),
     );
   }
