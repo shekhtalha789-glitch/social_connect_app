@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../core/utils/validators.dart';
+import '../../../core/widgets/responsive_center.dart';
 import '../../../core/widgets/user_avatar.dart';
 import 'profile_providers.dart';
 
@@ -106,6 +107,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final profileAsync = ref.watch(currentUserProfileProvider);
     final user = profileAsync.asData?.value;
 
@@ -123,78 +125,117 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       body: uid == null
           ? const Center(child: CircularProgressIndicator())
           : SafeArea(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Center(
-                        child: Stack(
-                          children: [
-                            _pickedImage != null
-                                ? CircleAvatar(
-                                    radius: 56,
-                                    backgroundImage: FileImage(_pickedImage!),
-                                  )
-                                : UserAvatar(
-                                    photoUrl: user!.photoUrl,
-                                    initial: user.initial,
-                                    radius: 56,
+              child: ResponsiveCenter(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Center(child: _buildAvatar(context, user!)),
+                        const SizedBox(height: 12),
+                        Text(
+                          'Change Profile Picture',
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.labelMedium?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                            letterSpacing: 1,
+                          ),
+                        ),
+                        const SizedBox(height: 32),
+                        TextFormField(
+                          controller: _name,
+                          textCapitalization: TextCapitalization.words,
+                          decoration: const InputDecoration(labelText: 'Name'),
+                          validator: Validators.name,
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: _bio,
+                          maxLines: 5,
+                          maxLength: 250,
+                          decoration: const InputDecoration(
+                            labelText: 'Bio',
+                            hintText: 'Tell us about yourself…',
+                            alignLabelWithHint: true,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        FilledButton(
+                          onPressed: _saving ? null : () => _save(uid),
+                          child: _saving
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
                                   ),
-                            Positioned(
-                              right: 0,
-                              bottom: 0,
-                              child: CircleAvatar(
-                                radius: 18,
-                                child: IconButton(
-                                  iconSize: 18,
-                                  icon: const Icon(Icons.camera_alt),
-                                  onPressed: _saving
-                                      ? null
-                                      : _showImageSourceSheet,
-                                ),
-                              ),
-                            ),
-                          ],
+                                )
+                              : const Text('Save'),
                         ),
-                      ),
-                      const SizedBox(height: 24),
-                      TextFormField(
-                        controller: _name,
-                        textCapitalization: TextCapitalization.words,
-                        decoration: const InputDecoration(labelText: 'Name'),
-                        validator: Validators.name,
-                      ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: _bio,
-                        maxLines: 4,
-                        maxLength: 160,
-                        decoration: const InputDecoration(
-                          labelText: 'Bio',
-                          alignLabelWithHint: true,
+                        const SizedBox(height: 16),
+                        Text(
+                          'All changes are immediately reflected on your '
+                          'public profile.',
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 16),
-                      FilledButton(
-                        onPressed: _saving ? null : () => _save(uid),
-                        child: _saving
-                            ? const SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : const Text('Save'),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
+    );
+  }
+
+  Widget _buildAvatar(BuildContext context, dynamic user) {
+    final scheme = Theme.of(context).colorScheme;
+    return Stack(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: scheme.primaryContainer.withValues(alpha: 0.10),
+              width: 4,
+            ),
+          ),
+          child: _pickedImage != null
+              ? CircleAvatar(radius: 56, backgroundImage: FileImage(_pickedImage!))
+              : UserAvatar(
+                  photoUrl: user.photoUrl,
+                  initial: user.initial,
+                  radius: 56,
+                ),
+        ),
+        Positioned(
+          right: 4,
+          bottom: 4,
+          child: Material(
+            color: scheme.primaryContainer,
+            shape: CircleBorder(
+              side: BorderSide(color: scheme.surface, width: 2),
+            ),
+            child: InkWell(
+              customBorder: const CircleBorder(),
+              onTap: _saving ? null : _showImageSourceSheet,
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Icon(
+                  Icons.photo_camera,
+                  size: 18,
+                  color: scheme.onPrimary,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

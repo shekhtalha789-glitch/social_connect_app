@@ -4,11 +4,12 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/router.dart';
 import '../../../core/constants/app_strings.dart';
-import '../../../core/widgets/user_avatar.dart';
+import '../../../core/widgets/responsive_center.dart';
 import '../domain/app_user.dart';
 import 'profile_providers.dart';
+import 'widgets/profile_header.dart';
 
-/// The signed-in user's profile: avatar, name, bio, email, and an edit action.
+/// The signed-in user's profile: avatar, name, email, and an About card.
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
@@ -47,38 +48,45 @@ class _ProfileBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return ListView(
-      padding: const EdgeInsets.all(24),
-      children: [
-        Center(
-          child: UserAvatar(
+    return ResponsiveCenter(
+      child: ListView(
+        padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
+        children: [
+          ProfileHeader(
             photoUrl: user.photoUrl,
             initial: user.initial,
-            radius: 56,
+            name: user.name.isEmpty ? 'No name yet' : user.name,
+            secondaryLine: user.email,
           ),
-        ),
-        const SizedBox(height: 16),
-        Text(
-          user.name.isEmpty ? 'No name yet' : user.name,
-          textAlign: TextAlign.center,
-          style: theme.textTheme.headlineSmall,
-        ),
-        const SizedBox(height: 4),
-        Text(
-          user.email,
-          textAlign: TextAlign.center,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
+          const SizedBox(height: 32),
+          Row(
+            children: [
+              Icon(Icons.info_outline, size: 20, color: theme.colorScheme.primary),
+              const SizedBox(width: 8),
+              Text('About', style: theme.textTheme.titleMedium),
+            ],
           ),
-        ),
-        const SizedBox(height: 24),
-        Text('About', style: theme.textTheme.titleMedium),
-        const SizedBox(height: 8),
-        Text(
-          user.bio.isEmpty ? 'No bio yet. Tap edit to add one.' : user.bio,
-          style: theme.textTheme.bodyLarge,
-        ),
-      ],
+          const SizedBox(height: 12),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerLowest,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.2),
+              ),
+            ),
+            child: Text(
+              user.bio.isEmpty ? 'No bio yet. Tap edit to add one.' : user.bio,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+                height: 1.5,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -96,10 +104,7 @@ class _EmptyProfile extends StatelessWidget {
         children: [
           const Text('Finish setting up your profile'),
           const SizedBox(height: 12),
-          FilledButton(
-            onPressed: onCreate,
-            child: const Text('Set up profile'),
-          ),
+          FilledButton(onPressed: onCreate, child: const Text('Set up profile')),
         ],
       ),
     );
