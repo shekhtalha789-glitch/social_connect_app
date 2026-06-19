@@ -35,11 +35,9 @@ class _CommentsScreenState extends ConsumerState<CommentsScreen> {
 
     setState(() => _sending = true);
     try {
-      await ref.read(feedRepositoryProvider).addComment(
-            postId: widget.postId,
-            author: author,
-            text: body,
-          );
+      await ref
+          .read(feedRepositoryProvider)
+          .addComment(postId: widget.postId, author: author, text: body);
       _text.clear();
     } catch (e) {
       if (mounted) {
@@ -78,11 +76,7 @@ class _CommentsScreenState extends ConsumerState<CommentsScreen> {
             ),
           ),
           const Divider(height: 1),
-          _CommentInput(
-            controller: _text,
-            sending: _sending,
-            onSend: _send,
-          ),
+          _CommentInput(controller: _text, sending: _sending, onSend: _send),
         ],
       ),
     );

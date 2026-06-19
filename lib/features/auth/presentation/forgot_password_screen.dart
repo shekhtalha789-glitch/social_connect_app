@@ -99,8 +99,11 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       mainAxisSize: MainAxisSize.min,
       children: [
         const SizedBox(height: 32),
-        Icon(Icons.mark_email_read_outlined,
-            size: 72, color: theme.colorScheme.primary),
+        Icon(
+          Icons.mark_email_read_outlined,
+          size: 72,
+          color: theme.colorScheme.primary,
+        ),
         const SizedBox(height: 16),
         Text('Check your inbox', style: theme.textTheme.titleLarge),
         const SizedBox(height: 8),

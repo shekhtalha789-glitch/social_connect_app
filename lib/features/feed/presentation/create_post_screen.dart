@@ -52,11 +52,9 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
 
     setState(() => _posting = true);
     try {
-      await ref.read(feedRepositoryProvider).createPost(
-            author: author,
-            text: _text.text,
-            image: _image,
-          );
+      await ref
+          .read(feedRepositoryProvider)
+          .createPost(author: author, text: _text.text, image: _image);
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
       if (mounted) {

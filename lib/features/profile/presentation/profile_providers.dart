@@ -21,7 +21,6 @@ final currentUserProfileProvider = StreamProvider<AppUser?>((ref) {
 });
 
 /// Live profile of any user by id (for viewing other users' profiles).
-final userProfileProvider =
-    StreamProvider.family<AppUser?, String>((ref, uid) {
+final userProfileProvider = StreamProvider.family<AppUser?, String>((ref, uid) {
   return ref.watch(profileRepositoryProvider).watchUser(uid);
 });

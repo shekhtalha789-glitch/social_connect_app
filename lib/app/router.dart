@@ -34,19 +34,40 @@ abstract class Routes {
   static String userProfile(String uid) => '/users/$uid';
 }
 
+/// A smooth fade + subtle upward slide for pushed pages. Used so navigation
+/// between screens feels fluid instead of a hard cut.
+CustomTransitionPage<void> _fadeSlide(GoRouterState state, Widget child) {
+  return CustomTransitionPage<void>(
+    key: state.pageKey,
+    transitionDuration: const Duration(milliseconds: 250),
+    reverseTransitionDuration: const Duration(milliseconds: 200),
+    child: child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      final curved = CurvedAnimation(parent: animation, curve: Curves.easeOut);
+      return FadeTransition(
+        opacity: curved,
+        child: SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(0, 0.03),
+            end: Offset.zero,
+          ).animate(curved),
+          child: child,
+        ),
+      );
+    },
+  );
+}
+
 /// Routes reachable while signed out. Everything else requires auth.
-const _authArea = {
-  Routes.welcome,
-  Routes.login,
-  Routes.signup,
-  Routes.forgot,
-};
+const _authArea = {Routes.welcome, Routes.login, Routes.signup, Routes.forgot};
 
 /// Exposes the app's [GoRouter] as a provider. The router watches auth state via
 /// a [ValueNotifier] (its `refreshListenable`) so it re-evaluates the redirect
 /// whenever the user signs in or out.
 final routerProvider = Provider<GoRouter>((ref) {
-  final authState = ValueNotifier<AsyncValue<User?>>(const AsyncValue.loading());
+  final authState = ValueNotifier<AsyncValue<User?>>(
+    const AsyncValue.loading(),
+  );
   ref.listen(
     authStateProvider,
     (_, next) => authState.value = next,
@@ -75,34 +96,42 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: Routes.login,
-        builder: (context, state) => const LoginScreen(),
+        pageBuilder: (context, state) => _fadeSlide(state, const LoginScreen()),
       ),
       GoRoute(
         path: Routes.signup,
-        builder: (context, state) => const SignupScreen(),
+        pageBuilder: (context, state) =>
+            _fadeSlide(state, const SignupScreen()),
       ),
       GoRoute(
         path: Routes.forgot,
-        builder: (context, state) => const ForgotPasswordScreen(),
+        pageBuilder: (context, state) =>
+            _fadeSlide(state, const ForgotPasswordScreen()),
       ),
       // Full-screen routes pushed over the shell (auth-gated by default).
       GoRoute(
         path: Routes.editProfile,
-        builder: (context, state) => const EditProfileScreen(),
+        pageBuilder: (context, state) =>
+            _fadeSlide(state, const EditProfileScreen()),
       ),
       GoRoute(
         path: Routes.createPost,
-        builder: (context, state) => const CreatePostScreen(),
+        pageBuilder: (context, state) =>
+            _fadeSlide(state, const CreatePostScreen()),
       ),
       GoRoute(
         path: '/posts/:id/comments',
-        builder: (context, state) =>
-            CommentsScreen(postId: state.pathParameters['id']!),
+        pageBuilder: (context, state) => _fadeSlide(
+          state,
+          CommentsScreen(postId: state.pathParameters['id']!),
+        ),
       ),
       GoRoute(
         path: '/users/:uid',
-        builder: (context, state) =>
-            UserProfileScreen(uid: state.pathParameters['uid']!),
+        pageBuilder: (context, state) => _fadeSlide(
+          state,
+          UserProfileScreen(uid: state.pathParameters['uid']!),
+        ),
       ),
       // Bottom-nav tabs live inside a StatefulShellRoute so each tab keeps its
       // own navigation stack — the Stack + Tab navigator combo from the spec.
@@ -137,8 +166,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         ],
       ),
     ],
-    errorBuilder: (context, state) => Scaffold(
-      body: Center(child: Text('Route not found: ${state.uri}')),
-    ),
+    errorBuilder: (context, state) =>
+        Scaffold(body: Center(child: Text('Route not found: ${state.uri}'))),
   );
 });

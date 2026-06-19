@@ -20,9 +20,10 @@ class FeedRepository {
 
   /// Live feed, newest first.
   Stream<List<Post>> watchPosts() {
-    return _posts.orderBy('createdAt', descending: true).snapshots().map(
-          (snap) => snap.docs.map(Post.fromDoc).toList(),
-        );
+    return _posts
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snap) => snap.docs.map(Post.fromDoc).toList());
   }
 
   /// Live stream of a single user's posts, newest first.
@@ -73,13 +74,15 @@ class FeedRepository {
       final snap = await tx.get(ref);
       if (!snap.exists) return;
 
-      final likedBy =
-          List<String>.from(snap.data()?['likedBy'] as List<dynamic>? ?? const []);
+      final likedBy = List<String>.from(
+        snap.data()?['likedBy'] as List<dynamic>? ?? const [],
+      );
       final liked = likedBy.contains(uid);
 
       tx.update(ref, {
-        'likedBy':
-            liked ? FieldValue.arrayRemove([uid]) : FieldValue.arrayUnion([uid]),
+        'likedBy': liked
+            ? FieldValue.arrayRemove([uid])
+            : FieldValue.arrayUnion([uid]),
         'likeCount': FieldValue.increment(liked ? -1 : 1),
       });
     });

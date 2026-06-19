@@ -9,6 +9,7 @@ import '../../../../core/widgets/user_avatar.dart';
 import '../../../auth/presentation/auth_providers.dart';
 import '../../domain/post.dart';
 import '../feed_providers.dart';
+import 'like_button.dart';
 
 /// A single post in the feed: author header, text, optional image, and the
 /// like / comment action row.
@@ -64,15 +65,14 @@ class PostCard extends ConsumerWidget {
             ),
           Row(
             children: [
-              _ActionButton(
-                icon: liked ? Icons.favorite : Icons.favorite_border,
-                color: liked ? Colors.red : null,
-                label: post.likeCount > 0 ? '${post.likeCount}' : 'Like',
+              LikeButton(
+                liked: liked,
+                count: post.likeCount,
                 onTap: uid == null
                     ? null
                     : () => ref
-                        .read(feedRepositoryProvider)
-                        .toggleLike(post.id, uid),
+                          .read(feedRepositoryProvider)
+                          .toggleLike(post.id, uid),
               ),
               _ActionButton(
                 icon: Icons.mode_comment_outlined,
@@ -94,22 +94,20 @@ class _ActionButton extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.onTap,
-    this.color,
   });
 
   final IconData icon;
   final String label;
   final VoidCallback? onTap;
-  final Color? color;
 
   @override
   Widget build(BuildContext context) {
     return TextButton.icon(
       onPressed: onTap,
-      icon: Icon(icon, size: 20, color: color),
+      icon: Icon(icon, size: 20),
       label: Text(label),
       style: TextButton.styleFrom(
-        foregroundColor: color ?? Theme.of(context).colorScheme.onSurfaceVariant,
+        foregroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
       ),
     );
   }

@@ -36,10 +36,9 @@ class NotificationService {
   Future<void> _saveToken(String token) async {
     final uid = _auth.currentUser?.uid;
     if (uid == null) return;
-    await _firestore
-        .collection('users')
-        .doc(uid)
-        .set({'fcmToken': token}, SetOptions(merge: true));
+    await _firestore.collection('users').doc(uid).set({
+      'fcmToken': token,
+    }, SetOptions(merge: true));
   }
 
   void _showForeground(RemoteMessage message) {

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/router.dart';
 import '../../../core/constants/app_strings.dart';
+import '../../../core/widgets/responsive_center.dart';
 import 'feed_providers.dart';
 import 'widgets/post_card.dart';
 
@@ -22,10 +23,12 @@ class FeedScreen extends ConsumerWidget {
         error: (e, _) => const Center(child: Text(AppStrings.loadError)),
         data: (items) {
           if (items.isEmpty) return const _EmptyFeed();
-          return ListView.builder(
-            itemCount: items.length,
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            itemBuilder: (context, i) => PostCard(post: items[i]),
+          return ResponsiveCenter(
+            child: ListView.builder(
+              itemCount: items.length,
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              itemBuilder: (context, i) => PostCard(post: items[i]),
+            ),
           );
         },
       ),
@@ -50,15 +53,19 @@ class _EmptyFeed extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.forum_outlined,
-                size: 64, color: theme.colorScheme.primary),
+            Icon(
+              Icons.forum_outlined,
+              size: 64,
+              color: theme.colorScheme.primary,
+            ),
             const SizedBox(height: 16),
             Text('No posts yet', style: theme.textTheme.titleLarge),
             const SizedBox(height: 8),
             Text(
               'Be the first to share something.',
-              style: theme.textTheme.bodyMedium
-                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ),
           ],
         ),

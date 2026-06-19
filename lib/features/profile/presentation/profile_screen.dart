@@ -67,8 +67,9 @@ class _ProfileBody extends StatelessWidget {
         Text(
           user.email,
           textAlign: TextAlign.center,
-          style: theme.textTheme.bodyMedium
-              ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
         ),
         const SizedBox(height: 24),
         Text('About', style: theme.textTheme.titleMedium),
@@ -95,7 +96,10 @@ class _EmptyProfile extends StatelessWidget {
         children: [
           const Text('Finish setting up your profile'),
           const SizedBox(height: 12),
-          FilledButton(onPressed: onCreate, child: const Text('Set up profile')),
+          FilledButton(
+            onPressed: onCreate,
+            child: const Text('Set up profile'),
+          ),
         ],
       ),
     );

@@ -20,9 +20,9 @@ class ProfileRepository {
 
   /// Live stream of a user's profile.
   Stream<AppUser?> watchUser(String uid) {
-    return _userDoc(uid).snapshots().map(
-          (doc) => doc.exists ? AppUser.fromDoc(doc) : null,
-        );
+    return _userDoc(
+      uid,
+    ).snapshots().map((doc) => doc.exists ? AppUser.fromDoc(doc) : null);
   }
 
   /// Uploads a new profile image and returns its download URL.

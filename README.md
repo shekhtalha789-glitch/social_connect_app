@@ -93,7 +93,7 @@ The app is built in small, focused commits (see
 - [x] Like + comment (transactional likes, comments subcollection)
 - [x] View other users' profiles (tap an author in the feed)
 - [x] Notifications (FCM) + real-time updates (Firestore streams)
-- [ ] Animations + responsive polish
+- [x] Animations (flutter_animate) + responsive layout + polish
 
 ## Submission
 

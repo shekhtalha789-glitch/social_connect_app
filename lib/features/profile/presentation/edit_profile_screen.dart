@@ -88,9 +88,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         photoUrl: photoUrl,
       );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile updated')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Profile updated')));
         Navigator.of(context).pop();
       }
     } catch (e) {
@@ -184,8 +184,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                             ? const SizedBox(
                                 height: 20,
                                 width: 20,
-                                child:
-                                    CircularProgressIndicator(strokeWidth: 2),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
                               )
                             : const Text('Save'),
                       ),
