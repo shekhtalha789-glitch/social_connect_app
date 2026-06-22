@@ -39,7 +39,10 @@ class FeedScreen extends ConsumerWidget {
         backgroundColor: scheme.primary,
         foregroundColor: scheme.onPrimary,
         icon: const Icon(Icons.edit_outlined),
-        label: const Text('Post', style: TextStyle(fontWeight: FontWeight.bold)),
+        label: const Text(
+          'Post',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }
@@ -71,24 +74,24 @@ class _EmptyFeed extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(28),
-                  decoration: BoxDecoration(
-                    color: scheme.surfaceContainerLowest,
-                    borderRadius: BorderRadius.circular(32),
-                    boxShadow: [
-                      BoxShadow(
-                        color: scheme.primary.withValues(alpha: 0.05),
-                        blurRadius: 30,
-                        offset: const Offset(0, 12),
+                      padding: const EdgeInsets.all(28),
+                      decoration: BoxDecoration(
+                        color: scheme.surfaceContainerLowest,
+                        borderRadius: BorderRadius.circular(32),
+                        boxShadow: [
+                          BoxShadow(
+                            color: scheme.primary.withValues(alpha: 0.05),
+                            blurRadius: 30,
+                            offset: const Offset(0, 12),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  child: Icon(
-                    Icons.forum_rounded,
-                    size: 64,
-                    color: scheme.primaryContainer,
-                  ),
-                )
+                      child: Icon(
+                        Icons.forum_rounded,
+                        size: 64,
+                        color: scheme.primaryContainer,
+                      ),
+                    )
                     .animate(onPlay: (c) => c.repeat(reverse: true))
                     .moveY(
                       begin: 0,

@@ -48,7 +48,12 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
 
   Future<void> _submit() async {
     final author = ref.read(currentUserProfileProvider).asData?.value;
-    if (author == null) return;
+    if (author == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Still loading your profile. Try again.')),
+      );
+      return;
+    }
 
     setState(() => _posting = true);
     try {

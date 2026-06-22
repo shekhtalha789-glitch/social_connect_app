@@ -7,53 +7,51 @@ class AppTextStyles {
   AppTextStyles._();
 
   static TextStyle get headlineLg => GoogleFonts.inter(
-        fontSize: 32,
-        height: 40 / 32,
-        fontWeight: FontWeight.w700,
-        letterSpacing: -0.02 * 32,
-      );
+    fontSize: 32,
+    height: 40 / 32,
+    fontWeight: FontWeight.w700,
+    letterSpacing: -0.02 * 32,
+  );
 
   static TextStyle get headlineMd => GoogleFonts.inter(
-        fontSize: 24,
-        height: 32 / 24,
-        fontWeight: FontWeight.w700,
-        letterSpacing: -0.01 * 24,
-      );
+    fontSize: 24,
+    height: 32 / 24,
+    fontWeight: FontWeight.w700,
+    letterSpacing: -0.01 * 24,
+  );
 
   static TextStyle get titleMd => GoogleFonts.inter(
-        fontSize: 18,
-        height: 24 / 18,
-        fontWeight: FontWeight.w600,
-      );
+    fontSize: 18,
+    height: 24 / 18,
+    fontWeight: FontWeight.w600,
+  );
 
   static TextStyle get bodyLg => GoogleFonts.inter(
-        fontSize: 16,
-        height: 24 / 16,
-        fontWeight: FontWeight.w400,
-      );
+    fontSize: 16,
+    height: 24 / 16,
+    fontWeight: FontWeight.w400,
+  );
 
   static TextStyle get bodyMd => GoogleFonts.inter(
-        fontSize: 14,
-        height: 20 / 14,
-        fontWeight: FontWeight.w400,
-      );
+    fontSize: 14,
+    height: 20 / 14,
+    fontWeight: FontWeight.w400,
+  );
 
   static TextStyle get labelMd => GoogleFonts.inter(
-        fontSize: 12,
-        height: 16 / 12,
-        fontWeight: FontWeight.w500,
-        letterSpacing: 0.01 * 12,
-      );
+    fontSize: 12,
+    height: 16 / 12,
+    fontWeight: FontWeight.w500,
+    letterSpacing: 0.01 * 12,
+  );
 
   static TextStyle get caption => GoogleFonts.inter(
-        fontSize: 12,
-        height: 16 / 12,
-        fontWeight: FontWeight.w400,
-      );
+    fontSize: 12,
+    height: 16 / 12,
+    fontWeight: FontWeight.w400,
+  );
 
   /// Button label style (16px bold).
-  static TextStyle get button => GoogleFonts.inter(
-        fontSize: 16,
-        fontWeight: FontWeight.w700,
-      );
+  static TextStyle get button =>
+      GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w700);
 }

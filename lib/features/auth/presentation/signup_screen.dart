@@ -39,7 +39,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _loading = true);
     try {
-      await ref.read(authRepositoryProvider).signUp(
+      await ref
+          .read(authRepositoryProvider)
+          .signUp(
             name: _name.text,
             email: _email.text,
             password: _password.text,
@@ -60,10 +62,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AuthAppBar(
-        title: 'Create Account',
-        onBack: () => context.go(Routes.welcome),
-      ),
+      appBar: const AuthAppBar(title: 'Create Account'),
       body: SafeArea(
         child: ResponsiveCenter(
           child: SingleChildScrollView(
@@ -78,8 +77,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     width: 64,
                     height: 64,
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.primaryContainer
-                          .withValues(alpha: 0.10),
+                      color: theme.colorScheme.primaryContainer.withValues(
+                        alpha: 0.10,
+                      ),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Icon(
@@ -89,8 +89,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  Text('Join Social Connect',
-                      style: theme.textTheme.displaySmall),
+                  Text(
+                    'Join Social Connect',
+                    style: theme.textTheme.displaySmall,
+                  ),
                   const SizedBox(height: 8),
                   Text(
                     'Start building your community and discover meaningful '
@@ -171,8 +173,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     children: [
                       const Text('Already have an account?'),
                       TextButton(
-                        onPressed:
-                            _loading ? null : () => context.go(Routes.login),
+                        onPressed: _loading
+                            ? null
+                            : () => context.pushReplacement(Routes.login),
                         child: const Text('Log In'),
                       ),
                     ],

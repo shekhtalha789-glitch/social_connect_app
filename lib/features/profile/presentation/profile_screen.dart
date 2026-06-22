@@ -61,7 +61,11 @@ class _ProfileBody extends StatelessWidget {
           const SizedBox(height: 32),
           Row(
             children: [
-              Icon(Icons.info_outline, size: 20, color: theme.colorScheme.primary),
+              Icon(
+                Icons.info_outline,
+                size: 20,
+                color: theme.colorScheme.primary,
+              ),
               const SizedBox(width: 8),
               Text('About', style: theme.textTheme.titleMedium),
             ],
@@ -104,7 +108,10 @@ class _EmptyProfile extends StatelessWidget {
         children: [
           const Text('Finish setting up your profile'),
           const SizedBox(height: 12),
-          FilledButton(onPressed: onCreate, child: const Text('Set up profile')),
+          FilledButton(
+            onPressed: onCreate,
+            child: const Text('Set up profile'),
+          ),
         ],
       ),
     );

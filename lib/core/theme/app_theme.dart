@@ -62,10 +62,7 @@ class AppTheme {
       bodySmall: AppTextStyles.caption,
       labelLarge: AppTextStyles.button,
       labelMedium: AppTextStyles.labelMd,
-    ).apply(
-      bodyColor: scheme.onSurface,
-      displayColor: scheme.onSurface,
-    );
+    ).apply(bodyColor: scheme.onSurface, displayColor: scheme.onSurface);
 
     return ThemeData(
       useMaterial3: true,
@@ -78,7 +75,9 @@ class AppTheme {
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         scrolledUnderElevation: 0.5,
-        titleTextStyle: AppTextStyles.headlineMd.copyWith(color: scheme.primary),
+        titleTextStyle: AppTextStyles.headlineMd.copyWith(
+          color: scheme.primary,
+        ),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
@@ -121,9 +120,7 @@ class AppTheme {
         surfaceTintColor: Colors.transparent,
         elevation: 0.5,
         shadowColor: AppColors.primary.withValues(alpha: 0.04),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: scheme.surfaceContainerLowest,

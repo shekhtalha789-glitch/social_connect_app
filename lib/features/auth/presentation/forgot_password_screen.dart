@@ -47,9 +47,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     try {
       await ref.read(authRepositoryProvider).sendPasswordReset(_email.text);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Reset link sent again')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Reset link sent again')));
       }
     } catch (e) {
       _showError(e);
@@ -60,18 +60,15 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
   void _showError(Object e) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(AuthRepository.describeError(e))),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(AuthRepository.describeError(e))));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AuthAppBar(
-        title: 'Reset Password',
-        onBack: () => Navigator.of(context).pop(),
-      ),
+      appBar: const AuthAppBar(title: 'Reset Password'),
       body: SafeArea(
         child: ResponsiveCenter(
           child: SingleChildScrollView(
@@ -163,7 +160,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
         ),
         const SizedBox(height: 32),
         _InfoChip(
-          text: "Didn't receive the email? Check your spam folder or try "
+          text:
+              "Didn't receive the email? Check your spam folder or try "
               'again in 5 minutes.',
         ),
         const SizedBox(height: 32),

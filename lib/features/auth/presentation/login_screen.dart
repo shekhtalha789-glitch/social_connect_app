@@ -54,10 +54,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AuthAppBar(
-        title: 'Log In',
-        onBack: () => context.go(Routes.welcome),
-      ),
+      appBar: const AuthAppBar(title: 'Log In'),
       body: SafeArea(
         child: ResponsiveCenter(
           child: SingleChildScrollView(
@@ -111,8 +108,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
-                      onPressed:
-                          _loading ? null : () => context.push(Routes.forgot),
+                      onPressed: _loading
+                          ? null
+                          : () => context.push(Routes.forgot),
                       child: const Text('Forgot password?'),
                     ),
                   ),
@@ -133,8 +131,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     children: [
                       const Text("Don't have an account?"),
                       TextButton(
-                        onPressed:
-                            _loading ? null : () => context.go(Routes.signup),
+                        onPressed: _loading
+                            ? null
+                            : () => context.pushReplacement(Routes.signup),
                         child: const Text('Sign Up'),
                       ),
                     ],

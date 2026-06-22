@@ -12,10 +12,6 @@ class AppStrings {
   static const String profileTitle = 'Profile';
   static const String settingsTitle = 'Settings';
 
-  // Welcome
-  static const String getStarted = 'Get Started';
-
   // Generic
   static const String loadError = 'Something went wrong. Please try again.';
-  static const String comingSoon = 'Coming soon';
 }

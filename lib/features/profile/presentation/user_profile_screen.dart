@@ -49,8 +49,8 @@ class UserProfileScreen extends ConsumerWidget {
                       user.bio,
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   ),
                 ],
@@ -96,9 +96,7 @@ class _UserPosts extends StatelessWidget {
             child: Center(child: Text('No posts yet.')),
           );
         }
-        return Column(
-          children: [for (final p in items) PostCard(post: p)],
-        );
+        return Column(children: [for (final p in items) PostCard(post: p)]);
       },
     );
   }

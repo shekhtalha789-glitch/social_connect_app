@@ -29,9 +29,7 @@ class PostCard extends ConsumerWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(
-          color: scheme.outlineVariant.withValues(alpha: 0.2),
-        ),
+        side: BorderSide(color: scheme.outlineVariant.withValues(alpha: 0.2)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -56,8 +54,9 @@ class PostCard extends ConsumerWidget {
                     children: [
                       Text(
                         post.authorName.isEmpty ? 'Unknown' : post.authorName,
-                        style: theme.textTheme.titleMedium
-                            ?.copyWith(fontWeight: FontWeight.w600),
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                       Text(
                         timeAgo(post.createdAt),
@@ -108,8 +107,8 @@ class PostCard extends ConsumerWidget {
                   onTap: uid == null
                       ? null
                       : () => ref
-                          .read(feedRepositoryProvider)
-                          .toggleLike(post.id, uid),
+                            .read(feedRepositoryProvider)
+                            .toggleLike(post.id, uid),
                 ),
                 const SizedBox(width: 8),
                 _ActionButton(
@@ -144,10 +143,7 @@ class _ActionButton extends StatelessWidget {
     return TextButton.icon(
       onPressed: onTap,
       icon: Icon(icon, size: 20),
-      label: Text(
-        label,
-        style: const TextStyle(fontWeight: FontWeight.w600),
-      ),
+      label: Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
       style: TextButton.styleFrom(
         foregroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
       ),

@@ -206,7 +206,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
             ),
           ),
           child: _pickedImage != null
-              ? CircleAvatar(radius: 56, backgroundImage: FileImage(_pickedImage!))
+              ? CircleAvatar(
+                  radius: 56,
+                  backgroundImage: FileImage(_pickedImage!),
+                )
               : UserAvatar(
                   photoUrl: user.photoUrl,
                   initial: user.initial,

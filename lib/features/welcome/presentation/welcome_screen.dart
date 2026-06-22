@@ -35,9 +35,7 @@ class WelcomeScreen extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           _AppLogo()
-                              .animate(
-                                onPlay: (c) => c.repeat(reverse: true),
-                              )
+                              .animate(onPlay: (c) => c.repeat(reverse: true))
                               .moveY(
                                 begin: 0,
                                 end: -8,
@@ -52,8 +50,7 @@ class WelcomeScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 12),
                           Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 24),
+                            padding: const EdgeInsets.symmetric(horizontal: 24),
                             child: Text(
                               AppStrings.appTagline,
                               textAlign: TextAlign.center,
@@ -71,12 +68,12 @@ class WelcomeScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         FilledButton(
-                          onPressed: () => context.go(Routes.login),
+                          onPressed: () => context.push(Routes.login),
                           child: const Text('Log In'),
                         ),
                         const SizedBox(height: 16),
                         OutlinedButton(
-                          onPressed: () => context.go(Routes.signup),
+                          onPressed: () => context.push(Routes.signup),
                           child: const Text('Create account'),
                         ),
                       ],

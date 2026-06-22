@@ -31,16 +31,20 @@ class _CommentsScreenState extends ConsumerState<CommentsScreen> {
 
   Future<void> _send() async {
     final body = _text.text.trim();
+    if (body.isEmpty) return;
     final author = ref.read(currentUserProfileProvider).asData?.value;
-    if (body.isEmpty || author == null) return;
+    if (author == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Still loading your profile. Try again.')),
+      );
+      return;
+    }
 
     setState(() => _sending = true);
     try {
-      await ref.read(feedRepositoryProvider).addComment(
-            postId: widget.postId,
-            author: author,
-            text: body,
-          );
+      await ref
+          .read(feedRepositoryProvider)
+          .addComment(postId: widget.postId, author: author, text: body);
       _text.clear();
     } catch (e) {
       if (mounted) {
@@ -65,7 +69,8 @@ class _CommentsScreenState extends ConsumerState<CommentsScreen> {
             child: ResponsiveCenter(
               child: comments.when(
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, _) => const Center(child: Text(AppStrings.loadError)),
+                error: (e, _) =>
+                    const Center(child: Text(AppStrings.loadError)),
                 data: (items) {
                   if (items.isEmpty) return const _EmptyComments();
                   return ListView.separated(
@@ -76,18 +81,15 @@ class _CommentsScreenState extends ConsumerState<CommentsScreen> {
                     itemCount: items.length,
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 20),
-                    itemBuilder: (context, i) => _CommentTile(comment: items[i]),
+                    itemBuilder: (context, i) =>
+                        _CommentTile(comment: items[i]),
                   );
                 },
               ),
             ),
           ),
           const Divider(height: 1),
-          _CommentInput(
-            controller: _text,
-            sending: _sending,
-            onSend: _send,
-          ),
+          _CommentInput(controller: _text, sending: _sending, onSend: _send),
         ],
       ),
     );
@@ -119,9 +121,12 @@ class _CommentTile extends StatelessWidget {
                 children: [
                   Flexible(
                     child: Text(
-                      comment.authorName.isEmpty ? 'Unknown' : comment.authorName,
-                      style: theme.textTheme.bodyLarge
-                          ?.copyWith(fontWeight: FontWeight.w600),
+                      comment.authorName.isEmpty
+                          ? 'Unknown'
+                          : comment.authorName,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),

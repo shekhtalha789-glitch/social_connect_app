@@ -32,11 +32,7 @@ class ProfileHeader extends StatelessWidget {
               width: 4,
             ),
           ),
-          child: UserAvatar(
-            photoUrl: photoUrl,
-            initial: initial,
-            radius: 56,
-          ),
+          child: UserAvatar(photoUrl: photoUrl, initial: initial, radius: 56),
         ),
         const SizedBox(height: 16),
         Text(
