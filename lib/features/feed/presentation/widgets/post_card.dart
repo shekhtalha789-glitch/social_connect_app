@@ -106,9 +106,21 @@ class PostCard extends ConsumerWidget {
                   count: post.likeCount,
                   onTap: uid == null
                       ? null
-                      : () => ref
-                            .read(feedRepositoryProvider)
-                            .toggleLike(post.id, uid),
+                      : () async {
+                          try {
+                            await ref
+                                .read(feedRepositoryProvider)
+                                .toggleLike(post.id, uid, liked);
+                          } catch (_) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Could not update like.'),
+                                ),
+                              );
+                            }
+                          }
+                        },
                 ),
                 const SizedBox(width: 8),
                 _ActionButton(

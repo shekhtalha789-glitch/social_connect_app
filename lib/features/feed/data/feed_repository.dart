@@ -66,25 +66,17 @@ class FeedRepository {
     });
   }
 
-  /// Likes or unlikes a post for [uid]. Runs in a transaction so the
-  /// `likeCount` and `likedBy` array can never drift on concurrent taps.
-  Future<void> toggleLike(String postId, String uid) async {
-    final ref = _posts.doc(postId);
-    await _firestore.runTransaction((tx) async {
-      final snap = await tx.get(ref);
-      if (!snap.exists) return;
-
-      final likedBy = List<String>.from(
-        snap.data()?['likedBy'] as List<dynamic>? ?? const [],
-      );
-      final liked = likedBy.contains(uid);
-
-      tx.update(ref, {
-        'likedBy': liked
-            ? FieldValue.arrayRemove([uid])
-            : FieldValue.arrayUnion([uid]),
-        'likeCount': FieldValue.increment(liked ? -1 : 1),
-      });
+  /// Likes or unlikes a post for [uid]. Uses a direct update (not a
+  /// transaction) so Firestore's latency compensation flips the UI instantly,
+  /// even before the server confirms. [currentlyLiked] is the state from the UI:
+  /// like when false, unlike when true. arrayUnion/arrayRemove are idempotent,
+  /// keeping the array correct on rapid taps.
+  Future<void> toggleLike(String postId, String uid, bool currentlyLiked) {
+    return _posts.doc(postId).update({
+      'likedBy': currentlyLiked
+          ? FieldValue.arrayRemove([uid])
+          : FieldValue.arrayUnion([uid]),
+      'likeCount': FieldValue.increment(currentlyLiked ? -1 : 1),
     });
   }
 
@@ -116,6 +108,17 @@ class FeedRepository {
       'createdAt': FieldValue.serverTimestamp(),
     });
     batch.update(postRef, {'commentCount': FieldValue.increment(1)});
+    await batch.commit();
+  }
+
+  /// Permanently deletes a comment and decrements the post's `commentCount`.
+  Future<void> deleteComment(String postId, String commentId) async {
+    final postRef = _posts.doc(postId);
+    final commentRef = postRef.collection('comments').doc(commentId);
+
+    final batch = _firestore.batch();
+    batch.delete(commentRef);
+    batch.update(postRef, {'commentCount': FieldValue.increment(-1)});
     await batch.commit();
   }
 }

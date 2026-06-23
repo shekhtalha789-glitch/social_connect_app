@@ -5,6 +5,7 @@ import '../../../core/constants/app_strings.dart';
 import '../../../core/utils/time_ago.dart';
 import '../../../core/widgets/responsive_center.dart';
 import '../../../core/widgets/user_avatar.dart';
+import '../../auth/presentation/auth_providers.dart';
 import '../../profile/presentation/profile_providers.dart';
 import '../domain/comment.dart';
 import 'feed_providers.dart';
@@ -57,9 +58,43 @@ class _CommentsScreenState extends ConsumerState<CommentsScreen> {
     }
   }
 
+  Future<void> _confirmDelete(String commentId) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete comment?'),
+        content: const Text('This comment will be permanently removed.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+
+    try {
+      await ref
+          .read(feedRepositoryProvider)
+          .deleteComment(widget.postId, commentId);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not delete comment. Try again.')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final comments = ref.watch(commentsStreamProvider(widget.postId));
+    final uid = ref.watch(authStateProvider).asData?.value?.uid;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Comments')),
@@ -81,8 +116,14 @@ class _CommentsScreenState extends ConsumerState<CommentsScreen> {
                     itemCount: items.length,
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 20),
-                    itemBuilder: (context, i) =>
-                        _CommentTile(comment: items[i]),
+                    itemBuilder: (context, i) {
+                      final c = items[i];
+                      return _CommentTile(
+                        comment: c,
+                        isOwn: uid != null && c.authorId == uid,
+                        onDelete: () => _confirmDelete(c.id),
+                      );
+                    },
                   );
                 },
               ),
@@ -97,9 +138,15 @@ class _CommentsScreenState extends ConsumerState<CommentsScreen> {
 }
 
 class _CommentTile extends StatelessWidget {
-  const _CommentTile({required this.comment});
+  const _CommentTile({
+    required this.comment,
+    required this.isOwn,
+    required this.onDelete,
+  });
 
   final Comment comment;
+  final bool isOwn;
+  final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -144,6 +191,14 @@ class _CommentTile extends StatelessWidget {
             ],
           ),
         ),
+        // Only the comment's author can delete it.
+        if (isOwn)
+          IconButton(
+            icon: const Icon(Icons.delete_outline, size: 20),
+            color: theme.colorScheme.onSurfaceVariant,
+            tooltip: 'Delete comment',
+            onPressed: onDelete,
+          ),
       ],
     );
   }

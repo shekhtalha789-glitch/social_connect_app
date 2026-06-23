@@ -135,13 +135,17 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                       children: [
                         Text(
                           author.name.isEmpty ? 'You' : author.name,
-                          style: theme.textTheme.bodyMedium
-                              ?.copyWith(fontWeight: FontWeight.w600),
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                         Row(
                           children: [
-                            Icon(Icons.public,
-                                size: 14, color: scheme.onSurfaceVariant),
+                            Icon(
+                              Icons.public,
+                              size: 14,
+                              color: scheme.onSurfaceVariant,
+                            ),
                             const SizedBox(width: 4),
                             Text(
                               'Public',
@@ -207,8 +211,11 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                           onTap: () => setState(() => _image = null),
                           child: const Padding(
                             padding: EdgeInsets.all(6),
-                            child: Icon(Icons.close,
-                                size: 18, color: Colors.white),
+                            child: Icon(
+                              Icons.close,
+                              size: 18,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
