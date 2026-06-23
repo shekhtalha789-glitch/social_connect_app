@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../core/utils/upload_error.dart';
 import '../../../core/utils/validators.dart';
 import '../../../core/widgets/responsive_center.dart';
 import '../../../core/widgets/user_avatar.dart';
@@ -96,8 +97,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Could not save profile. Try again.')),
+        showUploadErrorSnackBar(
+          context,
+          e,
+          fallback: 'Could not save profile. Try again.',
         );
       }
     } finally {

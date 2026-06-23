@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../core/utils/upload_error.dart';
 import '../../../core/widgets/user_avatar.dart';
 import '../../profile/presentation/profile_providers.dart';
 import 'feed_providers.dart';
@@ -66,8 +67,10 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Could not publish post. Try again.')),
+        showUploadErrorSnackBar(
+          context,
+          e,
+          fallback: 'Could not publish post. Try again.',
         );
       }
     } finally {
